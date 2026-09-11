@@ -1,0 +1,235 @@
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- A-Frame -->
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+
+  <!-- MindAR -->
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+
+    #mensaje {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+
+      padding: 12px 18px;
+      border-radius: 15px;
+
+      text-align: center;
+      font-size: 16px;
+    }
+  </style>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+      const cubo = document.querySelector("#cubo");
+      const esfera = document.querySelector("#esfera");
+
+      const target1 = document.querySelector("#target1");
+      const target2 = document.querySelector("#target2");
+
+      const mensaje = document.querySelector("#mensaje");
+
+
+      // ----- INTERACCIÓN DEL CUBO -----
+
+      let cuboAzul = true;
+
+      cubo.addEventListener("click", function () {
+
+        if (cuboAzul) {
+          cubo.setAttribute("color", "yellow");
+        } else {
+          cubo.setAttribute("color", "blue");
+        }
+
+        cuboAzul = !cuboAzul;
+
+      });
+
+
+      // ----- INTERACCIÓN DE LA ESFERA -----
+
+      let esferaRosa = true;
+
+      esfera.addEventListener("click", function () {
+
+        if (esferaRosa) {
+          esfera.setAttribute("color", "purple");
+        } else {
+          esfera.setAttribute("color", "pink");
+        }
+
+        esferaRosa = !esferaRosa;
+
+      });
+
+
+      // ----- FEEDBACK VISUAL -----
+
+      target1.addEventListener("targetFound", function () {
+        mensaje.innerHTML = "Target 1 detectado ✨<br>Toca el cubo";
+      });
+
+      target2.addEventListener("targetFound", function () {
+        mensaje.innerHTML = "Target 2 detectado ✨<br>Toca la esfera";
+      });
+
+
+      target1.addEventListener("targetLost", function () {
+        mensaje.innerHTML = "Escanea uno de los targets";
+      });
+
+      target2.addEventListener("targetLost", function () {
+        mensaje.innerHTML = "Escanea uno de los targets";
+      });
+
+    });
+  </script>
+
+</head>
+
+
+<body>
+
+  <!-- MENSAJE DE AYUDA -->
+
+  <div id="mensaje">
+    Escanea uno de los targets
+  </div>
+
+
+  <!-- ESCENA DE REALIDAD AUMENTADA -->
+
+  <a-scene
+
+    mindar-image="
+      imageTargetSrc: ./targets.mind;
+      maxTrack: 2;
+    "
+
+    color-space="sRGB"
+
+    renderer="
+      colorManagement: true;
+      physicallyCorrectLights: true;
+    "
+
+    vr-mode-ui="enabled: false"
+
+    device-orientation-permission-ui="enabled: false"
+  >
+
+
+    <!-- CÁMARA -->
+
+    <a-camera
+
+      position="0 0 0"
+
+      look-controls="enabled: false"
+
+      cursor="
+        fuse: false;
+        rayOrigin: mouse;
+      "
+
+      raycaster="
+        objects: .clickable;
+      "
+
+    ></a-camera>
+
+
+
+    <!-- ======================== -->
+    <!-- TARGET 1 -->
+    <!-- ======================== -->
+
+    <a-entity
+      id="target1"
+      mindar-image-target="targetIndex: 0"
+    >
+
+      <a-box
+
+        id="cubo"
+
+        class="clickable"
+
+        position="0 0 0"
+
+        scale="0.5 0.5 0.5"
+
+        color="blue"
+
+        rotation="0 0 0"
+
+        animation="
+          property: rotation;
+          to: 0 360 0;
+          dur: 4000;
+          loop: true;
+          easing: linear;
+        "
+
+      ></a-box>
+
+    </a-entity>
+
+
+
+    <!-- ======================== -->
+    <!-- TARGET 2 -->
+    <!-- ======================== -->
+
+    <a-entity
+      id="target2"
+      mindar-image-target="targetIndex: 1"
+    >
+
+      <a-sphere
+
+        id="esfera"
+
+        class="clickable"
+
+        position="0 0 0"
+
+        radius="0.3"
+
+        color="pink"
+
+        animation="
+          property: position;
+          to: 0 0.25 0;
+          dur: 1000;
+          dir: alternate;
+          loop: true;
+          easing: easeInOutQuad;
+        "
+
+      ></a-sphere>
+
+    </a-entity>
+
+
+  </a-scene>
+
+</body>
+
+</html>

@@ -140,17 +140,12 @@
     <a-camera
 
       position="0 0 0"
-
-      look-controls="enabled: false"
-
-      cursor="
-        fuse: false;
-        rayOrigin: mouse;
-      "
-
-      raycaster="
-        objects: .clickable;
-      "
+  look-controls="enabled: false"
+>
+  <a-cursor
+    raycaster="objects: .clickable"
+    fuse="false"
+  ></a-cursor>
 
     ></a-camera>
 
